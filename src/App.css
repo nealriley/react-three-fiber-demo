@@ -1,0 +1,52 @@
+.app {
+  width: 100vw;
+  height: 100vh;
+  background-color: #050505; /* Darker background */
+  position: relative;
+}
+
+.typing-preview {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+  font-size: 1.2rem;
+  z-index: 100;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.typing-content {
+  flex: 1;
+  text-align: center;
+}
+
+.download-button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1rem;
+  margin-right: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.download-button:hover {
+  background-color: #45a049;
+}
+
+.placeholder {
+  opacity: 0.5;
+  font-style: italic;
+}
