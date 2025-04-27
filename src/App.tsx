@@ -233,11 +233,20 @@ function App() {
     setDisplayedLetters(prev => prev.filter(letter => letter.id !== id));
   }, []);
 
+  const getTextContent = useCallback(() => {
+    return textBuffer.join(' ');
+  }, [textBuffer]);
+  
+  const clearTextBuffer = useCallback(() => {
+    setTextBuffer([]);
+    setHasText(false);
+  }, []);
+  
   const handleDownload = useCallback(() => {
     if (textBuffer.length === 0) return;
     
     // Create text content with proper spacing and line breaks
-    const content = textBuffer.join(' ');
+    const content = getTextContent();
     
     // Create a blob with the text content
     const blob = new Blob([content], { type: 'text/plain' });
@@ -257,9 +266,22 @@ function App() {
     URL.revokeObjectURL(url);
     
     // Clear text buffer
-    setTextBuffer([]);
-    setHasText(false);
-  }, [textBuffer]);
+    clearTextBuffer();
+  }, [textBuffer, getTextContent, clearTextBuffer]);
+  
+  const handleCopy = useCallback(() => {
+    if (textBuffer.length === 0) return;
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(getTextContent())
+      .then(() => {
+        // Clear text buffer
+        clearTextBuffer();
+      })
+      .catch(err => {
+        console.error('Could not copy text: ', err);
+      });
+  }, [textBuffer, getTextContent, clearTextBuffer]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -279,22 +301,27 @@ function App() {
         <div className="typing-content">
           {currentWord || <span className="empty-prompt"></span>}
         </div>
-        {hasText && (
-          <button className="button download-button" onClick={handleDownload}>
-            Download Text
-          </button>
-        )}
-        <button className="button toggle-button" onClick={togglePanel}>
-          Hide Panel
-        </button>
       </div>
       
-      <button 
-        className={`button show-panel-button ${!isPanelVisible ? 'visible' : ''}`}
-        onClick={togglePanel}
-      >
-        Show Panel
-      </button>
+      <div className="sidebar">
+        {hasText && (
+          <>
+            <button className="button download-button button-tooltip" onClick={handleDownload} data-tooltip="Download Text">
+              <i className="fas fa-download"></i>
+            </button>
+            <button className="button copy-button button-tooltip" onClick={handleCopy} data-tooltip="Copy to Clipboard">
+              <i className="fas fa-copy"></i>
+            </button>
+          </>
+        )}
+        <button 
+          className="button toggle-button button-tooltip" 
+          onClick={togglePanel}
+          data-tooltip={isPanelVisible ? "Hide Panel" : "Show Panel"}
+        >
+          <i className={isPanelVisible ? "fas fa-eye-slash" : "fas fa-eye"}></i>
+        </button>
+      </div>
       
       <Canvas camera={{ position: [0, 0, 5] }}>
         <ambientLight intensity={0.5} />

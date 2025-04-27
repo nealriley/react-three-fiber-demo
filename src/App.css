@@ -7,7 +7,7 @@
 
 .typing-preview {
   position: absolute;
-  left: 20px;
+  left: 80px;
   top: 20px;
   width: 280px;
   min-height: 120px;
@@ -50,39 +50,67 @@
   margin-bottom: 5px;
 }
 
+.sidebar {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
 .button {
   border: none;
   color: white;
-  padding: 8px 16px;
+  width: 45px;
+  height: 45px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
-  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.button i {
+  font-size: 1.4rem;
 }
 
 .download-button {
   background-color: #4CAF50;
-  width: 100%;
 }
 
 .download-button:hover {
   background-color: #45a049;
 }
 
+.copy-button {
+  background-color: #2196F3;
+}
+
+.copy-button:hover {
+  background-color: #0b7dda;
+}
+
 .toggle-button {
   background-color: #607d8b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  width: 100%;
 }
 
 .toggle-button:hover {
   background-color: #546e7a;
+}
+
+.hide-button {
+  background-color: #f44336;
+}
+
+.hide-button:hover {
+  background-color: #d32f2f;
 }
 
 .show-panel-button {
@@ -103,6 +131,33 @@
 
 .show-panel-button:hover {
   background-color: #546e7a;
+}
+
+/* Tooltip for buttons */
+.button-tooltip {
+  position: relative;
+}
+
+.button-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 55px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.button-tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
 }
 
 .empty-prompt {
