@@ -97,6 +97,7 @@ function App() {
   const [nextId, setNextId] = useState(1);
   const [textBuffer, setTextBuffer] = useState<string[]>([]);
   const [hasText, setHasText] = useState(false);
+  const [isPanelVisible, setIsPanelVisible] = useState(true);
   
   const startNewWord = useCallback(() => {
     if (currentWord.trim()) {
@@ -267,18 +268,34 @@ function App() {
     };
   }, [handleKeyDown]);
 
+  const togglePanel = useCallback(() => {
+    setIsPanelVisible(prev => !prev);
+  }, []);
+
   return (
     <div className="app">
-      <div className="typing-preview">
+      <div className={`typing-preview ${isPanelVisible ? '' : 'hidden'}`}>
+        <div className="typing-label">Currently typing:</div>
         <div className="typing-content">
-          Currently typing: {currentWord || <span className="placeholder">Type something...</span>}
+          {currentWord || <span className="empty-prompt"></span>}
         </div>
         {hasText && (
-          <button className="download-button" onClick={handleDownload}>
-            Download
+          <button className="button download-button" onClick={handleDownload}>
+            Download Text
           </button>
         )}
+        <button className="button toggle-button" onClick={togglePanel}>
+          Hide Panel
+        </button>
       </div>
+      
+      <button 
+        className={`button show-panel-button ${!isPanelVisible ? 'visible' : ''}`}
+        onClick={togglePanel}
+      >
+        Show Panel
+      </button>
+      
       <Canvas camera={{ position: [0, 0, 5] }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
