@@ -4,7 +4,7 @@
 ![React](https://img.shields.io/badge/React-18-blue)
 ![Three.js](https://img.shields.io/badge/Three.js-Latest-green)
 
-A meditative 3D typing experience where your words fade into the void. VoidWriter renders your text as three-dimensional objects that float, rotate, and gradually fade away in a peaceful dark environment.
+A meditative 2D typing experience where your words fade into the void. VoidWriter renders your text as three-dimensional objects that float, rotate, and gradually fade away in a peaceful dark environment.
 
 **⚠️ DISCLAIMER:** This is a demonstration project created to learn React with React Three Fiber. It should not be used in production environments as it hasn't been optimized for performance or tested across all browsers and devices.
 
