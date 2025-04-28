@@ -9,16 +9,18 @@ function FadingLetter({
   position, 
   onFadeComplete, 
   isFadingOut = false,
-  fontSize = 0.7
+  fontSize = 0.7,
+  fadeSpeedFactor = 1
 }: { 
   letter: string; 
   position: [number, number, number]; 
   onFadeComplete: () => void; 
   isFadingOut?: boolean;
   fontSize?: number;
+  fadeSpeedFactor?: number;
 }) {
   const [opacity, setOpacity] = useState(1);
-  const fadeSpeed = isFadingOut ? 0.05 : 0.01; // Faster fade for words being replaced
+  const fadeSpeed = isFadingOut ? 0.05 * fadeSpeedFactor : 0.01 * fadeSpeedFactor; // Fade speed adjustable by factor
   const meshRef = useRef<THREE.Mesh>(null);
   
   // Add subtle rotation to the letter
@@ -98,6 +100,7 @@ function App() {
   const [textBuffer, setTextBuffer] = useState<string[]>([]);
   const [hasText, setHasText] = useState(false);
   const [isPanelVisible, setIsPanelVisible] = useState(true);
+  const [fadeSpeedFactor, setFadeSpeedFactor] = useState(1); // Default speed factor
   
   const startNewWord = useCallback(() => {
     if (currentWord.trim()) {
@@ -237,9 +240,35 @@ function App() {
     return textBuffer.join(' ');
   }, [textBuffer]);
   
+  const getWordCount = useCallback(() => {
+    // Count words in buffer
+    const bufferWordCount = textBuffer.reduce((count, word) => {
+      // Remove punctuation, count actual words
+      const cleanWord = word.replace(/[.,!?;:]/g, '').trim();
+      return cleanWord ? count + 1 : count;
+    }, 0);
+    
+    // Add current word if it's not empty
+    const currentWordCount = currentWord.trim() ? 1 : 0;
+    
+    return bufferWordCount + currentWordCount;
+  }, [textBuffer, currentWord]);
+  
   const clearTextBuffer = useCallback(() => {
     setTextBuffer([]);
     setHasText(false);
+  }, []);
+  
+  const clearAllText = useCallback(() => {
+    // Clear the text buffer (stored text)
+    setTextBuffer([]);
+    setHasText(false);
+    
+    // Clear current word
+    setCurrentWord('');
+    
+    // Clear all displayed letters
+    setDisplayedLetters([]);
   }, []);
   
   const handleDownload = useCallback(() => {
@@ -301,6 +330,28 @@ function App() {
         <div className="typing-content">
           {currentWord || <span className="empty-prompt"></span>}
         </div>
+        
+        {/* Word count display */}
+        <div className="word-count">
+          <span>Word Count:</span>
+          <span>{getWordCount()}</span>
+        </div>
+        
+        <div className="fade-speed-control">
+          <div className="fade-speed-label">
+            <span>Fade Speed</span>
+            <span>{fadeSpeedFactor.toFixed(1)}x</span>
+          </div>
+          <input 
+            type="range" 
+            min="0.1" 
+            max="3" 
+            step="0.1" 
+            value={fadeSpeedFactor} 
+            onChange={(e) => setFadeSpeedFactor(parseFloat(e.target.value))} 
+            className="fade-speed-slider" 
+          />
+        </div>
       </div>
       
       <div className="sidebar">
@@ -313,6 +364,11 @@ function App() {
               <i className="fas fa-copy"></i>
             </button>
           </>
+        )}
+        {(hasText || displayedLetters.length > 0 || currentWord) && (
+          <button className="button clear-button button-tooltip" onClick={clearAllText} data-tooltip="Clear All Text">
+            <i className="fas fa-trash"></i>
+          </button>
         )}
         <button 
           className="button toggle-button button-tooltip" 
@@ -333,6 +389,7 @@ function App() {
             position={letter.position}
             fontSize={letter.fontSize}
             isFadingOut={!!letter.isFadingOut}
+            fadeSpeedFactor={fadeSpeedFactor}
             onFadeComplete={() => handleFadeComplete(letter.id)}
           />
         ))}
