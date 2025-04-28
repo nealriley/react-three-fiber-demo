@@ -8,8 +8,6 @@ A meditative 3D typing experience where your words fade into the void. VoidWrite
 
 **⚠️ DISCLAIMER:** This is a demonstration project created to learn React with React Three Fiber. It should not be used in production environments as it hasn't been optimized for performance or tested across all browsers and devices.
 
-![VoidWriter Demo](/public/voidwriter-demo.jpg)
-
 ## Features
 
 - 🔤 Real-time 3D text rendering with Three.js
